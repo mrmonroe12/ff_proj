@@ -1,4 +1,5 @@
 import pandas as pd
+import plotly.express as px
 
 starters_by_position = {
     "QB": 1,
@@ -55,8 +56,11 @@ proj_points_df["1st Pick Value"] = round(proj_points_df["PAR"] * (draft_budget /
 proj_points_df["Starter Value"] = round(proj_points_df["PAR"] * (draft_budget / target_above_repl) * (1-risk_factor) * (pos_disc), 2)
 proj_points_df["Inc 1st Pick"] = round(proj_points_df["1st Pick Value"] - proj_points_df["Starter Value"],2)
 draft_values_df = proj_points_df[['Player','Team','Pos','1st Pick Value','Starter Value', 'Inc 1st Pick','PAR','PAS','FantasyPoints']]
-
+draft_values_df = draft_values_df.loc[(draft_values_df["PAR"]>0)]
 
 draft_values_df.to_csv('output/Draft_Values.csv')
+
+fig = px.density_heatmap(draft_values_df, x="Pos", y="PAR")
+fig.show()
 
 
